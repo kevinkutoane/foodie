@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Home', style: TextStyle(color: Colors.amber)),
         backgroundColor: Colors.black,
@@ -77,7 +78,7 @@ class HomePage extends StatelessWidget {
 
             // Food Cards Section (Scroll Vertically)
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text('All Foods',
                   style: TextStyle(color: Colors.amber, fontSize: 18)),
             ),
@@ -251,12 +252,12 @@ class AllFoodsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, // 2 items per row
-        crossAxisSpacing: 16.0,
+        crossAxisSpacing: 12.0,
         mainAxisSpacing: 5.0,
         childAspectRatio: 3 / 4,
       ),
@@ -328,18 +329,18 @@ class AllFoodsSection extends StatelessWidget {
                           // Check if this star should be filled
                           if (starIndex < food['rating']) {
                             return const Icon(Icons.star,
-                                color: Colors.amber, size: 16);
+                                color: Colors.amber, size: 12);
                           } else if (starIndex < food['rating'] + 0.5) {
                             // For half-star ratings (optional)
                             return const Icon(Icons.star_half,
-                                color: Colors.amber, size: 16);
+                                color: Colors.amber, size: 12);
                           } else {
                             return const Icon(Icons.star_border,
-                                color: Colors.amber, size: 16);
+                                color: Colors.amber, size: 12);
                           }
                         }),
                       ),
-                      const SizedBox(height: 35.0,),
+                      const SizedBox(height: 10.0,),
                     ],
                   ),
                 ),

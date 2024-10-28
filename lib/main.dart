@@ -3,6 +3,7 @@ import 'package:floating_navbar/floating_navbar_item.dart';
 import 'package:flutter/material.dart';
 
 import 'package:foodie/widgets/bottom_navbar.dart';
+import 'package:foodie/widgets/view_cart.dart';
 import 'screens/home_page.dart';
 
 void main() {
@@ -35,7 +36,7 @@ class FoodApp extends StatelessWidget {
           FloatingNavBarItem(
             iconData: Icons.shopping_cart,
             title: 'Cart',
-            page: const ViewCartPage(),
+            page: const ViewCartPage(cartItems: [],),
           ),
           FloatingNavBarItem(
             iconData: Icons.person,

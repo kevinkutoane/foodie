@@ -17,7 +17,7 @@ class BottomNavbarState extends State<BottomNavbar> {
   final List<Widget> _pages = [
     const HomePage(),  // Assuming HomePage is defined elsewhere
     const GrabNGoPage(),  // Assuming GrabNGoPage is defined elsewhere
-    const ViewCartPage(),  // Assuming CartPage is defined elsewhere
+
     const ProfilePage(),  // Assuming ProfilePage is defined elsewhere
   ];
 
@@ -72,14 +72,6 @@ class GrabNGoPage extends StatelessWidget {
   }
 }
 
-class ViewCartPage extends StatelessWidget {
-  const ViewCartPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("View Cart Page"));
-  }
-}
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

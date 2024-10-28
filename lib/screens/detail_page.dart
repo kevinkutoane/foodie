@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/view_cart.dart';
+
 class DetailPage extends StatefulWidget {
   final String foodName;
   final String foodDescription;
@@ -26,6 +28,9 @@ class DetailPageState extends State<DetailPage> {
   bool withChips = false;
   String? additionalNotes;
   int quantity = 1; // quantity set to start at 1
+  double totalPrice = 0.0;
+
+  List<CartItem> cartItems = []; // List to hold cart items
 
   final List<String> campusAreas = [
     'North Block',
@@ -42,11 +47,29 @@ class DetailPageState extends State<DetailPage> {
   bool showNotesField = false;
 
   @override
+  void initState() {
+    super.initState();
+    totalPrice = widget.foodPrice; // Set initial total price
+  }
+
+  // Getter for cart items
+  List<CartItem> get getCartItems {
+    return cartItems;
+  }
+
+  // Function to update total price based on quantity and chips selection
+  void updateTotalPrice() {
+    setState(() {
+      totalPrice = (widget.foodPrice + (withChips ? 15.0 : 0.0)) * quantity;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:
-            Text(widget.foodName, style: const TextStyle(color: Colors.amber)),
+        Text(widget.foodName, style: const TextStyle(color: Colors.amber)),
         backgroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
@@ -77,10 +100,10 @@ class DetailPageState extends State<DetailPage> {
                 children: [
                   Text(widget.foodName,
                       style:
-                          const TextStyle(color: Colors.amber, fontSize: 22)),
+                      const TextStyle(color: Colors.amber, fontSize: 22)),
                   Text('R ${widget.foodPrice}',
                       style:
-                          const TextStyle(color: Colors.amber, fontSize: 18)),
+                      const TextStyle(color: Colors.amber, fontSize: 18)),
                   Row(
                     children: List.generate(5, (index) {
                       //rating out of 5 - starts on details page
@@ -113,13 +136,14 @@ class DetailPageState extends State<DetailPage> {
                     fontSize: 20,
                   )),
               RadioListTile(
-                title: const Text('With Chips (+ R10)',
+                title: const Text('With Chips (+ R15)',
                     style: TextStyle(color: Colors.white)),
                 value: true,
                 groupValue: withChips,
                 onChanged: (bool? value) {
                   setState(() {
                     withChips = value!;
+                    updateTotalPrice(); // Update the price
                   });
                 },
                 activeColor: Colors.amber,
@@ -133,6 +157,7 @@ class DetailPageState extends State<DetailPage> {
                 onChanged: (bool? value) {
                   setState(() {
                     withChips = value!;
+                    updateTotalPrice(); // Update the price
                   });
                 },
                 activeColor: Colors.amber,
@@ -163,7 +188,7 @@ class DetailPageState extends State<DetailPage> {
                   return DropdownMenuItem(
                     value: area,
                     child:
-                        Text(area, style: const TextStyle(color: Colors.amber)),
+                    Text(area, style: const TextStyle(color: Colors.amber)),
                   );
                 }).toList(),
               ),
@@ -239,6 +264,7 @@ class DetailPageState extends State<DetailPage> {
                 ),
 
               const SizedBox(height: 16),
+              const Divider(color: Colors.amber),
 
               // Quantity Selector
               Row(
@@ -248,6 +274,7 @@ class DetailPageState extends State<DetailPage> {
                     onPressed: () {
                       setState(() {
                         if (quantity > 1) quantity--;
+                        updateTotalPrice(); // Update the price
                       });
                     },
                     style: ElevatedButton.styleFrom(
@@ -265,12 +292,13 @@ class DetailPageState extends State<DetailPage> {
                     onPressed: () {
                       setState(() {
                         quantity++;
+                        updateTotalPrice(); // Update the price
                       });
                     },
                     style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),
                       backgroundColor: Colors.amber,
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(15),
                     ),
                     child: const Text('+', style: TextStyle(fontSize: 24)),
                   ),
@@ -279,30 +307,59 @@ class DetailPageState extends State<DetailPage> {
 
               const SizedBox(height: 16),
 
-              // Add to cart Button
+              // Add to cart Button with dynamic total price
               ElevatedButton(
                 onPressed: () {
-                  // Handle submit action
+                  // Define the cart item based on user selections
+                  CartItem newItem = CartItem(
+                      name: widget.foodName,
+                      price: widget.foodPrice,
+                      quantity: quantity, // Quantity selected by user
+                      withChips: withChips, // With or without chips
+
+                  );
+                  // Add the item to the cart list (you need to manage this list in your app)
+                  cartItems.add(newItem);
+
+                  // Navigate to the cart page after adding the item
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ViewCartPage(cartItems: getCartItems),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                 ),
-                child: const Center(
-                  child: Text('Add to Cart',
-                      style: TextStyle(color: Colors.black)),
-
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.shopping_cart, color: Colors.black),
+                        ), // Cart icon
+                        SizedBox(width: 8),
+                        Text('Add to Cart', style: TextStyle(color: Colors.black,)),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('R ${totalPrice.toStringAsFixed(2)}',
+                          style: const TextStyle(color: Colors.black)),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20.0,)
-
+              const SizedBox(height: 20.0),
             ],
           ),
         ),
-
       ),
       backgroundColor: Colors.black,
     );
-
   }
 }
